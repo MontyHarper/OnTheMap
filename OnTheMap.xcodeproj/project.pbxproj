@@ -9,21 +9,27 @@
 /* Begin PBXBuildFile section */
 		F12489142A76CD1E004DFCF7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12489132A76CD1E004DFCF7 /* AppDelegate.swift */; };
 		F12489162A76CD1E004DFCF7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12489152A76CD1E004DFCF7 /* SceneDelegate.swift */; };
-		F12489182A76CD1E004DFCF7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12489172A76CD1E004DFCF7 /* ViewController.swift */; };
+		F12489182A76CD1E004DFCF7 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12489172A76CD1E004DFCF7 /* LoginViewController.swift */; };
 		F124891B2A76CD1E004DFCF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F12489192A76CD1E004DFCF7 /* Main.storyboard */; };
 		F124891D2A76CD21004DFCF7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F124891C2A76CD21004DFCF7 /* Assets.xcassets */; };
 		F12489202A76CD21004DFCF7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F124891E2A76CD21004DFCF7 /* LaunchScreen.storyboard */; };
+		F12489282A7705AB004DFCF7 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12489272A7705AB004DFCF7 /* TableViewController.swift */; };
+		F124892A2A770634004DFCF7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12489292A770634004DFCF7 /* MapViewController.swift */; };
+		F124892C2A770ED5004DFCF7 /* PinDropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F124892B2A770ED5004DFCF7 /* PinDropViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F12489102A76CD1E004DFCF7 /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F12489132A76CD1E004DFCF7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F12489152A76CD1E004DFCF7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F12489172A76CD1E004DFCF7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F12489172A76CD1E004DFCF7 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F124891A2A76CD1E004DFCF7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F124891C2A76CD21004DFCF7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F124891F2A76CD21004DFCF7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F12489212A76CD21004DFCF7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F12489272A7705AB004DFCF7 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		F12489292A770634004DFCF7 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		F124892B2A770ED5004DFCF7 /* PinDropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinDropViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +64,10 @@
 			children = (
 				F12489132A76CD1E004DFCF7 /* AppDelegate.swift */,
 				F12489152A76CD1E004DFCF7 /* SceneDelegate.swift */,
-				F12489172A76CD1E004DFCF7 /* ViewController.swift */,
+				F12489172A76CD1E004DFCF7 /* LoginViewController.swift */,
+				F12489272A7705AB004DFCF7 /* TableViewController.swift */,
+				F12489292A770634004DFCF7 /* MapViewController.swift */,
+				F124892B2A770ED5004DFCF7 /* PinDropViewController.swift */,
 				F12489192A76CD1E004DFCF7 /* Main.storyboard */,
 				F124891C2A76CD21004DFCF7 /* Assets.xcassets */,
 				F124891E2A76CD21004DFCF7 /* LaunchScreen.storyboard */,
@@ -138,9 +147,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F12489182A76CD1E004DFCF7 /* ViewController.swift in Sources */,
+				F12489182A76CD1E004DFCF7 /* LoginViewController.swift in Sources */,
+				F124892C2A770ED5004DFCF7 /* PinDropViewController.swift in Sources */,
 				F12489142A76CD1E004DFCF7 /* AppDelegate.swift in Sources */,
 				F12489162A76CD1E004DFCF7 /* SceneDelegate.swift in Sources */,
+				F124892A2A770634004DFCF7 /* MapViewController.swift in Sources */,
+				F12489282A7705AB004DFCF7 /* TableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
