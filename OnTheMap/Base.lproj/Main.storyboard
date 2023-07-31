@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="All-08-ZjF">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
@@ -12,23 +12,54 @@
         <!--Login View-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController title="Login" id="BYZ-38-t0r" userLabel="Login View" customClass="ViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Login" title="Login" id="BYZ-38-t0r" userLabel="Login View" customClass="LoginViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="LoginView">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MtR-vA-ahW">
+                                <rect key="frame" x="163" y="436" width="66" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Login"/>
+                                <connections>
+                                    <action selector="login" destination="BYZ-38-t0r" eventType="touchUpInside" id="Aai-Kg-j1k"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="4XH-Nt-Ird"/>
+                    <connections>
+                        <segue destination="ngf-6j-qOn" kind="presentation" identifier="PresentTabBar" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="JpR-G6-G2H"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-26" y="4"/>
+            <point key="canvasLocation" x="-940" y="4"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="fqb-HT-myc">
+            <objects>
+                <navigationController storyboardIdentifier="MapViewNavigation" id="HFx-Rm-IhH" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="3bS-ZP-EQa"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pc4-bS-feW">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="SRi-uS-GSU" kind="relationship" relationship="rootViewController" id="OPD-Qz-G54"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="edk-PZ-opa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="768" y="342"/>
         </scene>
         <!--Map-->
         <scene sceneID="Ypn-I9-bwG">
             <objects>
-                <viewController storyboardIdentifier="MapView" title="Map" id="SRi-uS-GSU" customClass="MapViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Map" title="Map" id="SRi-uS-GSU" customClass="MapViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wiu-wq-n6R" userLabel="Map View">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -42,11 +73,23 @@
                         <viewLayoutGuide key="safeArea" id="tT7-1c-W6u"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Map" image="map.fill" catalog="system" id="RY3-lz-AkD"/>
+                    <tabBarItem key="tabBarItem" title="Map" image="map" catalog="system" id="RY3-lz-AkD"/>
+                    <navigationItem key="navigationItem" title="Students On the Map!" id="RP9-45-FiX">
+                        <barButtonItem key="leftBarButtonItem" title="logout" image="arrowshape.backward" catalog="system" id="d9C-4v-2rH">
+                            <connections>
+                                <action selector="logout:" destination="SRi-uS-GSU" id="AcS-Zt-5FG"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="add pin" image="mappin" catalog="system" id="C7l-vm-GVo">
+                            <connections>
+                                <segue destination="vaw-Ze-Huy" kind="presentation" id="cDM-Qq-Tna"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e2U-Ma-o1o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1600" y="359"/>
+            <point key="canvasLocation" x="1600" y="342"/>
         </scene>
         <!--Pin Drop View Controller-->
         <scene sceneID="tiu-64-wwx">
@@ -57,12 +100,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gs7-Fp-fg6">
-                                <rect key="frame" x="153" y="483" width="84" height="35"/>
+                                <rect key="frame" x="153" y="444" width="84" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Dismiss"/>
                                 <connections>
-                                    <action selector="dismissPinDropViewController:" destination="vaw-Ze-Huy" eventType="touchUpInside" id="TWx-Zp-gmf"/>
+                                    <segue destination="Lj6-Wc-xmU" kind="unwind" unwindAction="dismissPinDropViewWithUnwindSegue:" id="fM7-FK-fjb"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -71,13 +114,14 @@
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aKZ-QT-opn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="Lj6-Wc-xmU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2495" y="-11"/>
+            <point key="canvasLocation" x="2493.8461538461538" y="-11.374407582938389"/>
         </scene>
         <!--Table View-->
         <scene sceneID="lga-8m-hCH">
             <objects>
-                <viewController storyboardIdentifier="TableView" title="Table View" id="OaY-If-Yvo" userLabel="Table View" customClass="TableViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Table" title="Table View" id="OaY-If-Yvo" userLabel="Table View" customClass="TableViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="RXJ-Tx-YFT">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -91,7 +135,19 @@
                         <viewLayoutGuide key="safeArea" id="YlH-et-MZf"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Table" image="list.bullet.rectangle.fill" catalog="system" id="8eb-RR-fd4"/>
+                    <tabBarItem key="tabBarItem" title="Table" image="list.bullet" catalog="system" id="8eb-RR-fd4"/>
+                    <navigationItem key="navigationItem" title="Students List" id="4ml-x2-Rd5">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" image="arrowshape.backward" catalog="system" id="vjL-Hq-YSW">
+                            <connections>
+                                <action selector="logout:" destination="OaY-If-Yvo" id="gKb-8K-gA8"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Add Pin" image="mappin" catalog="system" id="eOY-vP-SAS">
+                            <connections>
+                                <segue destination="vaw-Ze-Huy" kind="presentation" id="cOp-Qo-NaC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ktx-Ol-NYY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -100,30 +156,27 @@
         <!--Navigation Controller-->
         <scene sceneID="wNF-n9-EiP">
             <objects>
-                <navigationController storyboardIdentifier="NavigationController" title="Navigation Controller" id="All-08-ZjF" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="TableViewNavigation" title="Navigation Controller" id="All-08-ZjF" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="Gdf-R4-Sb0"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Nht-yP-6PR">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="ngf-6j-qOn" kind="relationship" relationship="rootViewController" id="TRV-XI-R7s"/>
+                        <segue destination="OaY-If-Yvo" kind="relationship" relationship="rootViewController" id="VHC-AP-adE"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5pU-I7-IvM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-772" y="4"/>
+            <point key="canvasLocation" x="768" y="-336"/>
         </scene>
         <!--Student Locations Tabbed View-->
         <scene sceneID="a3K-HX-54P">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarController" id="ngf-6j-qOn" userLabel="Student Locations Tabbed View" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="StudentLocationsTabBar" id="ngf-6j-qOn" userLabel="Student Locations Tabbed View" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="Student Locations" id="d4M-Yg-Ryv">
                         <barButtonItem key="leftBarButtonItem" title="LogOut" id="4L2-CI-nMX"/>
-                        <barButtonItem key="rightBarButtonItem" title="Pin" image="mappin" catalog="system" id="0rh-sS-HNQ">
-                            <connections>
-                                <segue destination="vaw-Ze-Huy" kind="presentation" id="fX5-Di-Zz8"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Pin" image="mappin" catalog="system" id="0rh-sS-HNQ"/>
                     </navigationItem>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="c8q-uU-MbS">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="49"/>
@@ -131,18 +184,22 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="OaY-If-Yvo" kind="relationship" relationship="viewControllers" id="rJO-dQ-Pbv"/>
-                        <segue destination="SRi-uS-GSU" kind="relationship" relationship="viewControllers" id="R4h-ed-vpk"/>
+                        <segue destination="All-08-ZjF" kind="relationship" relationship="viewControllers" id="ykO-qL-Cld"/>
+                        <segue destination="HFx-Rm-IhH" kind="relationship" relationship="viewControllers" id="Xcf-y9-eit"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P8b-PI-LOc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="706" y="4"/>
+            <point key="canvasLocation" x="-178" y="4"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="cDM-Qq-Tna"/>
+    </inferredMetricsTieBreakers>
     <resources>
-        <image name="list.bullet.rectangle.fill" catalog="system" width="128" height="93"/>
-        <image name="map.fill" catalog="system" width="128" height="110"/>
+        <image name="arrowshape.backward" catalog="system" width="128" height="104"/>
+        <image name="list.bullet" catalog="system" width="128" height="87"/>
+        <image name="map" catalog="system" width="128" height="112"/>
         <image name="mappin" catalog="system" width="106" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
