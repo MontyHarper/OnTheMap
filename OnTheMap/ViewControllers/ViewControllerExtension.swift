@@ -15,7 +15,13 @@ extension UIViewController {
             DispatchQueue.main.async {
                 self.dismiss(animated: true, completion: nil)
             }
-        
     }
     
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 }

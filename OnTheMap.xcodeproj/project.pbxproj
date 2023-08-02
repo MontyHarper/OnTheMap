@@ -17,6 +17,10 @@
 		F124892A2A770634004DFCF7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12489292A770634004DFCF7 /* MapViewController.swift */; };
 		F124892C2A770ED5004DFCF7 /* PinDropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F124892B2A770ED5004DFCF7 /* PinDropViewController.swift */; };
 		F124892F2A775E6F004DFCF7 /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F124892E2A775E6F004DFCF7 /* ViewControllerExtension.swift */; };
+		F1CEADC22A77EC21008CB942 /* MapResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1CEADC12A77EC21008CB942 /* MapResponses.swift */; };
+		F1CEADC42A77EC90008CB942 /* MapRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1CEADC32A77EC90008CB942 /* MapRequests.swift */; };
+		F1CEADC62A77ECA1008CB942 /* MapClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1CEADC52A77ECA1008CB942 /* MapClient.swift */; };
+		F1CEADCB2A79F387008CB942 /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1CEADCA2A79F387008CB942 /* StudentInformation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +36,10 @@
 		F12489292A770634004DFCF7 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		F124892B2A770ED5004DFCF7 /* PinDropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinDropViewController.swift; sourceTree = "<group>"; };
 		F124892E2A775E6F004DFCF7 /* ViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
+		F1CEADC12A77EC21008CB942 /* MapResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapResponses.swift; sourceTree = "<group>"; };
+		F1CEADC32A77EC90008CB942 /* MapRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRequests.swift; sourceTree = "<group>"; };
+		F1CEADC52A77ECA1008CB942 /* MapClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapClient.swift; sourceTree = "<group>"; };
+		F1CEADCA2A79F387008CB942 /* StudentInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +74,7 @@
 			children = (
 				F12489132A76CD1E004DFCF7 /* AppDelegate.swift */,
 				F12489152A76CD1E004DFCF7 /* SceneDelegate.swift */,
+				F1CEADC72A77ECA9008CB942 /* Model */,
 				F124892D2A775E30004DFCF7 /* ViewControllers */,
 				F12489192A76CD1E004DFCF7 /* Main.storyboard */,
 				F124891C2A76CD21004DFCF7 /* Assets.xcassets */,
@@ -85,6 +94,17 @@
 				F124892E2A775E6F004DFCF7 /* ViewControllerExtension.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		F1CEADC72A77ECA9008CB942 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F1CEADC52A77ECA1008CB942 /* MapClient.swift */,
+				F1CEADC32A77EC90008CB942 /* MapRequests.swift */,
+				F1CEADC12A77EC21008CB942 /* MapResponses.swift */,
+				F1CEADCA2A79F387008CB942 /* StudentInformation.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,11 +180,15 @@
 			files = (
 				F12489182A76CD1E004DFCF7 /* LoginViewController.swift in Sources */,
 				F124892C2A770ED5004DFCF7 /* PinDropViewController.swift in Sources */,
+				F1CEADC42A77EC90008CB942 /* MapRequests.swift in Sources */,
 				F124892F2A775E6F004DFCF7 /* ViewControllerExtension.swift in Sources */,
 				F12489142A76CD1E004DFCF7 /* AppDelegate.swift in Sources */,
+				F1CEADC62A77ECA1008CB942 /* MapClient.swift in Sources */,
 				F12489162A76CD1E004DFCF7 /* SceneDelegate.swift in Sources */,
 				F124892A2A770634004DFCF7 /* MapViewController.swift in Sources */,
 				F12489282A7705AB004DFCF7 /* TableViewController.swift in Sources */,
+				F1CEADC22A77EC21008CB942 /* MapResponses.swift in Sources */,
+				F1CEADCB2A79F387008CB942 /* StudentInformation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
