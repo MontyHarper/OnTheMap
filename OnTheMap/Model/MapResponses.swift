@@ -24,6 +24,12 @@ struct Session: Codable {
     let expiration: String
 }
 
+// Why are we decoding this? I don't think we need it.
+struct PostStudentLocationResponse: Codable {
+    let createdAt: Date
+    let objectID: String
+}
+
 
 
 // Decode json response for nex thing...

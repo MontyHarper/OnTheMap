@@ -18,6 +18,19 @@ struct StudentLocation: Codable {
     var mediaURL: String
     var latitude: Double
     var longitude: Double
+    
+    var nameAndLocation: String {
+        return firstName + lastName + mapString
+    }
+    
+    var validURL: Bool {
+        if mediaURL != "" && (mediaURL.prefix(7) == "http://" || mediaURL.prefix(8) == "https://") {
+            return true
+        } else {
+            return false
+        }
+    }
+    
 }
 
 // Captures the server response.

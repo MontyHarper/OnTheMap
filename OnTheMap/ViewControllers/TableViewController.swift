@@ -19,13 +19,14 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     
 
-    
-    
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
         tableView.delegate = self
         tableView.dataSource = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+    
+        super.viewWillAppear(true)
         
         MapClient.getStudentData() { success, error in
             if success {
@@ -43,7 +44,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("Number of students: \(Students.onTheMap.count)")
         return Students.onTheMap.count
     }
     
@@ -52,12 +52,40 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell")!
         let student = Students.onTheMap[indexPath.row]
+                
+        if student.validURL { // Indicate if the student has a valid link with an icon
+            
+            let config = UIImage.SymbolConfiguration(scale: .medium)
+            cell.imageView?.preferredSymbolConfiguration = config
+            cell.imageView?.image = UIImage(systemName: "link")
         
-        cell.textLabel?.text = student.firstName + " " + student.lastName + ", " + student.mapString + ". Posted: " + student.updatedAt.formatted()
+        /*
+         Wow, this really illustrates the fact that cells are recycled!
+         If I don't assign nil to the image in an else statement here,
+         scrolling down will show cells with a link icon that shouldn't have one.
+         These must be recycled cells that still have the icon attached.
+         So I've got to be thourough, and not just add an icon when needed, but
+         also make sure there is no icon where not needed.
+         */
+            
+        } else {
+            cell.imageView?.image = nil
+        }
         
-        
+        // Show student's name and location
+        cell.textLabel?.text = student.firstName + " " + student.lastName + " - " + student.mapString
         return cell
     }
     
     
+    // If user taps the table row, open the URL in prefered browser.
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if Students.onTheMap[indexPath.row].validURL {
+            let urlString = Students.onTheMap[indexPath.row].mediaURL
+            if let url = URL(string:urlString) {
+                UIApplication.shared.open(url)
+            }
+        }
+    }
 }

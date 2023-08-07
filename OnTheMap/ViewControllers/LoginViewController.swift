@@ -7,10 +7,18 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var userName: UITextField!
     @IBOutlet weak var password: UITextField!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        userName.delegate = self
+        password.delegate = self
+    }
+    
+    
     
     @IBAction func login() {
         
@@ -68,11 +76,10 @@ class LoginViewController: UIViewController {
     }
     
 
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+       textField.resignFirstResponder()
     }
+
     
     
    
