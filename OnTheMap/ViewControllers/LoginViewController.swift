@@ -12,13 +12,16 @@ import UIKit
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
     
-    // MARK - IBOutlets
+    
+    // MARK: - IBOutlets
     
     @IBOutlet weak var userName: UITextField!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     
-    // MARK - Lifecycle Functions
+    
+    
+    // MARK: - Lifecycle Functions
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +32,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     
     
-    // MARK - IBActions
+    // MARK: - IBActions
     
     // When user presses the login button, attempt to log them in.
     @IBAction func login() {
@@ -40,7 +43,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
        
     
-    // MARK - Completion Handlers
+    // MARK: - Completion Handlers
     
     // Handle login response
     func loginCompletion(success: Bool, error: Error?) {
@@ -63,15 +66,19 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    // MARK - Private Methods
+    
+    
+    // MARK: - Private Methods
+    
     func loginButtonToggle() {
         // Enables login button only when both username and password are present.
         
         loginButton.isEnabled = nonemptyString(userName.text) && nonemptyString(password.text)
     }
     
+    
 
-    // MARK - Delegate Functions
+    // MARK: - Delegate Functions
     
     // When user hits return, this dismisses the keyboard, toggles the login button.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -82,6 +89,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
 
+    
     // Toggles login button as soon as both fields are non-empty.
     func textFieldDidChangeSelection(_ textField: UITextField) {
         

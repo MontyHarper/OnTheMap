@@ -51,6 +51,7 @@ extension UIViewController {
         }
     }
     
+    
     // Returns true of a string has content, false if it is either nil, empty, or nothing but spaces.
     func nonemptyString(_ text:String?) -> Bool {
         

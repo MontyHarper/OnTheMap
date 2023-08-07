@@ -52,8 +52,8 @@ class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
         let myPin = StudentLocation(
             objectId: "abcd",
             uniqueKey: "1234",
-            firstName: "Bartholomew",
-            lastName: "Cubbins",
+            firstName: "Yogi",
+            lastName: "Bear",
             mapString: currentLocation,
             mediaURL: urlField.text ?? "",
             latitude: geoLocation.latitude,
