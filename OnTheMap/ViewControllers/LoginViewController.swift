@@ -4,83 +4,89 @@
 //
 //  Created by Monty Harper on 7/30/23.
 //
+//  Initial VC, allows user to log into the app.
+//
 
 import UIKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
+    
+    // MARK - IBOutlets
+    
     @IBOutlet weak var userName: UITextField!
     @IBOutlet weak var password: UITextField!
+    @IBOutlet weak var loginButton: UIButton!
+    
+    // MARK - Lifecycle Functions
     
     override func viewDidLoad() {
         super.viewDidLoad()
         userName.delegate = self
         password.delegate = self
+        loginButtonToggle() // Disables login button until both text fields are present.
     }
     
     
     
+    // MARK - IBActions
+    
+    // When user presses the login button, attempt to log them in.
     @IBAction func login() {
         
-            
-        // Set up a request
-        var request = URLRequest(url: MapClient.Endpoints.openSession.url)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        // We can assume non-nil text values since the login button will be disabled otherwise.
+        MapClient.login(username: userName.text!, password: password.text!, completion: loginCompletion(success:error:))
+    }
         
-        // Encode the body of the request as a json object.
-        // Encoding throws errors, so return with an error message if an error gets thrown.
-        // This seems unlikely since even if username and password are empty, a json object can be made from that.
-        do {
-            request.httpBody = try JSONEncoder().encode(SessionRequest(username: userName.text ?? " ", password: password.text ?? " "))
-        } catch {
-            print("Error - failed to parse json request into http body.")
-            showAlert(title: "Something Went Wrong", message: "Please double check your email and password. If this message appears again, I'm afraid all is lost." )
-            return
-        }
+       
+    
+    // MARK - Completion Handlers
+    
+    // Handle login response
+    func loginCompletion(success: Bool, error: Error?) {
         
-        // Set up a session and task
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) {data, response, error in
+        if success {
+            self.performSegue(withIdentifier: "PresentTabBar", sender: nil)
             
-            if let data = data {
-                let range = 5..<data.count
-                let newData = data.subdata(in: range) // *subset response data!* /
-                
-                // Here we have data, but it may not be what we think, if the login was unsuccessful
-                let decoder = JSONDecoder()
-                do {
-                    MapClient.Auth.sessionID = try decoder.decode(SessionResponse.self, from: newData).session.id
-                    DispatchQueue.main.async {
-                        self.performSegue(withIdentifier: "PresentTabBar", sender: nil)
-                    }
-                } catch {
-                    // The data doesn't fit our response pattern
-                    print("Error - Data does not fit expected response.")
-                    print(String(data: data, encoding: .utf8))
-                   
-                        self.showAlert(title: "Incorrect email or password.", message: "Please check for typos and try again.")
-                    
+        } else {
+            showAlert(title: "Login Error", message: "Please check your spelling and try again.")
+            
+            // For debugging
+            if let error = error {
+                print("\(error)")
                 }
-            } else {
-                // The response data was nil.
-                print("Error - did not receive data in response.")
-                
-                    self.showAlert(title: "No Response", message: "The server is not responding as expected to your login attempt. Please try again later.")
-                
-            }
+            
+            // Reset login form.
+            userName.text = ""
+            password.text = ""
+            loginButtonToggle()
         }
+    }
+    
+    // MARK - Private Methods
+    func loginButtonToggle() {
+        // Enables login button only when both username and password are present.
         
-        task.resume()
+        loginButton.isEnabled = nonemptyString(userName.text) && nonemptyString(password.text)
     }
     
 
+    // MARK - Delegate Functions
+    
+    // When user hits return, this dismisses the keyboard, toggles the login button.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-       textField.resignFirstResponder()
+        
+        textField.resignFirstResponder()
+        loginButtonToggle()
+        return true
     }
-
     
+
+    // Toggles login button as soon as both fields are non-empty.
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        
+        loginButtonToggle()
+    }
     
    
     

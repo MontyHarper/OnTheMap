@@ -20,7 +20,11 @@ class MapClient {
     }
     
     
-    // Provides URLs needed to make specific requests
+    /*
+     Provides URLs needed to make specific requests.
+     To retrieve the URL for a request:
+     MapClient.Endpoints.<request type>.url
+     */
     enum Endpoints {
         static let base = "https://onthemap-api.udacity.com/"
         
@@ -32,28 +36,84 @@ class MapClient {
         
         // Calculates the url to use for each request
         var URLString: String {
-            
             switch self {
             case .openSession: return Endpoints.base + "v1/session"
             case .getStudentLocations: return Endpoints.base + "v1/StudentLocation?limit=100&order=-updatedAt"
             case .logout: return Endpoints.base + "v1/session"
             case .dropPin: return Endpoints.base + "v1/StudentLocation"
             }
-            
         }
         
-        /*
-         Converts a URL string (see above) to an actual URL.
-         To retrieve the URL for a request:
-         MapClient.Endpoints.<request type>.url
-         */
+        // Converts a URL string (see above) to an actual URL.
         var url: URL {
             return URL(string: URLString)!
         }
     }
     
     
+    // MARK: Network Request Functions
     
+    // Logs the user into the app by retrieving a session ID.
+    
+    class func login(username: String, password: String, completion: @escaping (Bool, Error?) -> Void) {
+        
+        // Set up a request
+        var request = URLRequest(url: MapClient.Endpoints.openSession.url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Encode the body of the request as a json object.
+        do {
+            request.httpBody = try JSONEncoder().encode(SessionRequest(username: username, password: password))
+        } catch {
+            DispatchQueue.main.async {
+                completion(false, error)
+            }
+            return
+        }
+        
+        // Set up a session and task
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) {data, response, error in
+            
+            if let data = data {
+                let range = 5..<data.count
+                let newData = data.subdata(in: range) // *subset response data!* /
+                
+                // Decode the JSON response
+                let decoder = JSONDecoder()
+                do {
+                    MapClient.Auth.sessionID = try decoder.decode(SessionResponse.self, from: newData).session.id
+                    DispatchQueue.main.async {
+                        completion(true, nil)
+                    }
+                } catch {
+                    // The data doesn't fit our response pattern
+                    print("Error - Data does not fit expected response.")
+                    print(String(data: data, encoding: .utf8))
+                   
+                    DispatchQueue.main.async {
+                        completion(false, error)
+                    }
+                    
+                }
+            } else {
+                // The response data was nil.
+                print("Error - did not receive data in response.")
+                
+                DispatchQueue.main.async {
+                    completion(false, error)
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
+    
+    
+    // Retrieves an array of student locations.
     class func getStudentData(completion: @escaping (Bool,Error?) -> Void) {
         
         let request = URLRequest(url: MapClient.Endpoints.getStudentLocations.url)

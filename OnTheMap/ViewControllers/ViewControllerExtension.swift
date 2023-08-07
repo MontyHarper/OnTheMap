@@ -50,4 +50,25 @@ extension UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
     }
+    
+    // Returns true of a string has content, false if it is either nil, empty, or nothing but spaces.
+    func nonemptyString(_ text:String?) -> Bool {
+        
+        if let text = text {
+            
+            guard text != "" else {
+                return false // string is empty
+            }
+            
+            for char in text {
+                if char != " " { // string is not all spaces
+                    return true
+                }
+            }
+            return false // string is all spaces
+            
+        } else {
+            return false // string is nil
+        }
+    }
 }
