@@ -54,7 +54,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         } else {
             showAlert(title: "Login Error", message: "Please check your spelling and try again.")
             
-            // For debugging
             if let error = error {
                 print("\(error)")
                 }

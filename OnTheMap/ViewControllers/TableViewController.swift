@@ -4,7 +4,9 @@
 //
 //  Created by Monty Harper on 7/30/23.
 //
-//  VC for table view that displays a list of past student locations
+//  VC for table view that displays a list of past student locations.
+//  This is the first view we see after login, so this is the VC
+//  that calls for student data to be downloaded and stored.
 //
 
 import Foundation
@@ -29,7 +31,18 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
         tableView.dataSource = self
         
         // Load in an array of student locations to display in the table
-        MapClient.getStudentData(completion: getStudentDataCompletion(success:error:))
+        loadData()
+        
+        // Sign up to know when the user has loaded a new pin; re-load the data whenever that happens.
+        MapClient.nc.addObserver(self, selector: #selector(loadData), name: Notification.Name(MapClient.Notifications.pinAdded.rawValue), object: nil)
+        
+        /*
+         Sign up to know when new data is available.
+         Reload the table whenever that happens.
+         This is separated from the loadData function because the map view controller will need to have it's own response when new data is available.
+         */
+        MapClient.nc.addObserver(self, selector: #selector(reloadTable), name: Notification.Name(MapClient.Notifications.newData.rawValue), object: nil)
+
     }
     
     
@@ -38,23 +51,35 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     
     // Brings us back to this view after user drops a pin on the map in PinDropView
-    @IBAction func dismissPinDropView(unwindSegue: UIStoryboardSegue) {
-        // Reload the array of student locations to update the table
-        // Why does this not work?
+    // Does this even get used?
+    @IBAction func dismissPinDropView(unwindSegue: UIStoryboardSegue) {}
+    
+    
+    
+    // MARK: - Private Methods
+
+    
+    @objc func loadData() {
         MapClient.getStudentData(completion: getStudentDataCompletion(success:error:))
     }
-
+    
+    
+    @objc func reloadTable() {
+        self.tableView.reloadData()
+    }
     
     
     // MARK: - Completion Handlers
-    
     
     
     // Handles response from student data request
     func getStudentDataCompletion(success:Bool, error:Error?) {
         
         if success {
-            self.tableView.reloadData()
+            
+            // Announce that new data is available.
+            MapClient.nc.post(name: Notification.Name(MapClient.Notifications.newData.rawValue), object: nil)
+
         } else {
             print("\(String(describing: error))") // for debugging
             self.showAlert(title: "Student Data Unavailable", message: "The student data failed to load. Please try again later")
@@ -62,9 +87,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     
-    func updateView() {
-        
-    }
     
     // MARK: - Table View Delegate Functions
     

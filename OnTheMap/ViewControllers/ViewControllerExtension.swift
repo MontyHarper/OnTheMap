@@ -4,43 +4,41 @@
 //
 //  Created by Monty Harper on 7/30/23.
 //
+//  This extension adds functionality that needs to be accessible from multiple different view controllers.
+//
+
 
 import Foundation
 import UIKit
 
+
 extension UIViewController {
     
+    
+    // MARK: - logout function and completion handler
+    
+    // Logs the user out when they tap the logout button in navigation.
     @IBAction func logout(_ sender: UIBarButtonItem) {
-        
-        var request = URLRequest(url: MapClient.Endpoints.logout.url)
-        request.httpMethod = "DELETE"
-        var xsrfCookie: HTTPCookie? = nil
-        let sharedCookieStorage = HTTPCookieStorage.shared
-        for cookie in sharedCookieStorage.cookies! {
-            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
-        }
-        if let xsrfCookie = xsrfCookie {
-            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
-        }
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            if error != nil {
-                self.showAlert(title: "Unable to logout.", message: "Please try again later.")
-                return
-            }
-            // verify logout
-            let range = 5..<data!.count
-            let newData = data?.subdata(in: range)
-            print(String(data: newData!, encoding: .utf8)!)
-        }
-        task.resume()
-        
-        
-        DispatchQueue.main.async {
+        MapClient.logout(completion: logoutCompletion(success:))
+    }
+    
+    func logoutCompletion(success: Bool) {
+        if !success {
+            self.showAlert(title: "Unable to logout.", message: "Please try again later.")
+        } else {
             self.dismiss(animated: true, completion: nil)
         }
-    
     }
+    
+    
+    
+    // MARK: - Alert Function
+    
+    /*
+     Shows an alert with the given title and message.
+     Can optionally include a completion closure in the function call.
+     The closure is used to dismiss the pin drop view after user acknowledges the "pin had been dropped" message.
+     */
     
     func showAlert(title: String, message: String, completion:@escaping () -> Void = {}) {
         
@@ -52,7 +50,14 @@ extension UIViewController {
     }
     
     
-    // Returns true of a string has content, false if it is either nil, empty, or nothing but spaces.
+    
+    // MARK: - Non-Empty String Function for checking input
+    
+    /*
+     Checks whether a string is nil, empty, or just full of spaces.
+     Returns true if the string has content.
+     */
+    
     func nonemptyString(_ text:String?) -> Bool {
         
         if let text = text {

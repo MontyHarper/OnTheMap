@@ -12,7 +12,7 @@ import Foundation
 class MapClient {
     
     
-    // MARK: Properties
+    // MARK: - Properties
     
     // Stores credentials
     struct Auth {
@@ -22,7 +22,7 @@ class MapClient {
     
     /*
      Provides URLs needed to make specific requests.
-     To retrieve the URL for a request:
+     To retrieve the URL for a request use:
      MapClient.Endpoints.<request type>.url
      */
     enum Endpoints {
@@ -44,14 +44,28 @@ class MapClient {
             }
         }
         
-        // Converts a URL string (see above) to an actual URL.
+        // Converts the URL string from above to an actual URL.
         var url: URL {
             return URL(string: URLString)!
         }
     }
     
     
+    
+    // Set up notification center and notifications
+    
+    static let nc = NotificationCenter.default
+    
+    enum Notifications: String {
+        case pinAdded = "UserHasAddedPinToMap"
+        case newData = "NewDataIsAvailable"
+    }
+    
+    
+    
     // MARK: Network Request Functions
+    
+    // MARK: Login
     
     // Logs the user into the app by retrieving a session ID.
     
@@ -89,19 +103,13 @@ class MapClient {
                         completion(true, nil)
                     }
                 } catch {
-                    // The data doesn't fit our response pattern
-                    print("Error - Data does not fit expected response.")
-                    print(String(data: data, encoding: .utf8))
-                   
+                    // The data doesn't fit our response pattern.
                     DispatchQueue.main.async {
                         completion(false, error)
                     }
-                    
                 }
             } else {
                 // The response data was nil.
-                print("Error - did not receive data in response.")
-                
                 DispatchQueue.main.async {
                     completion(false, error)
                 }
@@ -112,21 +120,26 @@ class MapClient {
     }
     
     
+    // MARK: Retrieve Student Locations
     
     // Retrieves an array of student locations.
     class func getStudentData(completion: @escaping (Bool,Error?) -> Void) {
         
+        // Set up request, session and task
         let request = URLRequest(url: MapClient.Endpoints.getStudentLocations.url)
         let session = URLSession.shared
         let task = session.dataTask(with: request) {data, response, error in
             if let data = data {
                 
+                // Decode JSON response
                 let decoder = JSONDecoder()
                 do {
                     let results = try decoder.decode(StudentInformation.self, from: data)
                     
+                    // Store student locations
                     Students.onTheMap = process(results.results)
                     
+                    // Success!
                     DispatchQueue.main.async {
                         completion(true, nil)
                     }
@@ -134,65 +147,27 @@ class MapClient {
                     
                 } catch {
                     // The data doesn't fit our response pattern
-                    // print(String(data: data, encoding: .utf8))
-                    
                     fatalError("The student locations were unable to be stored due to an error in the code.")
                 }
                 
-            } else { // Handle error...
-                print("data is nil")
+            } else {
+                // Data is nil
                 DispatchQueue.main.async {
                     completion(false, error)
                 }
                 return
             }
-            
         }
         task.resume()
-        
     }
     
+   
     
-    /*
-     I made a choice to clean up the list below. It was full of duplicate entries and partial entries.
-     We were to show the most recent 100 entries, and this will reduce the number shown on screen, so it's possible this violates one of the requirements.
-     I can alter this function to return the original array if necessary.
-     I also may alter it to filter out more listings, for example some of them are just a first name, and some of them list non-locations like "a".
-     */
-    
-    class func process(_ array:[StudentLocation]) -> [StudentLocation] {
-        
-        // Return a cleaned-up array of student locations.
-        // This function will remove duplicate student locations, plus any locations missing a student name.
-        
-        var newArray = [StudentLocation]()
-        var remove = false
-        
-        for testLocation in array {
-            
-            for location in newArray {
-                if location.nameAndLocation == testLocation.nameAndLocation {
-                    remove = true
-                }
-            }
-            
-            if (testLocation.firstName.count <= 2 && testLocation.lastName.count <= 2) || testLocation.mapString.count <= 2 {
-                remove = true
-            }
-            
-            if !remove {
-                newArray.append(testLocation)
-            } else {
-                remove = false
-            }
-            
-        }
-        
-        return newArray
-    }
+    // MARK: Post a Pin
     
     class func postStudentLocation(pin: StudentLocation, completion: @escaping (Bool,Error?) -> Void) {
         
+        // Set up request
         var request = URLRequest(url: MapClient.Endpoints.dropPin.url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -200,21 +175,105 @@ class MapClient {
         do {
             request.httpBody = try JSONEncoder().encode(pin)
         } catch {
-            print("Error - failed to parse json request into http body.")
+            // Failed to parse results
             completion (false, error)
         }
         
+        // Run the task
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
-            if error != nil { // Handle error…
+            if error != nil {
+                // Failed
                 completion(false, error!)
             }
-            print(String(data: data!, encoding: .utf8)!)
+            // Success!
             completion(true, nil)
-            
         }
         task.resume()
     }
     
+    
+    
+    // MARK: Logout
+    
+    class func logout(completion: @escaping (Bool) -> Void) {
+        
+        // Set up the url request and task
+        var request = URLRequest(url: MapClient.Endpoints.logout.url)
+        request.httpMethod = "DELETE"
+        
+        // Not sure what this cookie stuff is doing, but I copied it from the Udacity instructions...
+        var xsrfCookie: HTTPCookie? = nil
+        let sharedCookieStorage = HTTPCookieStorage.shared
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        if let xsrfCookie = xsrfCookie {
+            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+        
+        // Call the session
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, response, error in
+            
+            if error != nil {
+                // Failed
+                DispatchQueue.main.async {
+                    return completion(false)
+                }
+            }
+            // verify logout
+            let range = 5..<data!.count
+            let newData = data?.subdata(in: range)
+            print(String(data: newData!, encoding: .utf8)!)
+            DispatchQueue.main.async {
+                return completion(true)
+            }
+        }
+        task.resume()
+    }
+    
+    
+    // MARK: - Data Processing
+    
+    /*
+     I made a choice to clean up the list using the function below.
+     The data was full of duplicate entries and partial entries.
+     (Now that I've been testing the drop a pin function I can see why!)
+     */
+    
+    class func process(_ array:[StudentLocation]) -> [StudentLocation] {
+        
+        // Return a cleaned-up array of student locations.
+        // This function will remove duplicate student locations, plus any locations missing a student name.
+
+        var newArray = [StudentLocation]()
+        var remove = false
+        
+        // Test each location in the array
+        for testLocation in array {
+            
+            // Remove the location if it's a repeat
+            for location in newArray {
+                if location.nameAndLocation == testLocation.nameAndLocation {
+                    remove = true
+                }
+            }
+            
+            // Remove the location if it doesn't really have a person or place name
+            if (testLocation.firstName.count <= 2 && testLocation.lastName.count <= 2) || testLocation.mapString.count <= 2 {
+                remove = true
+            }
+            
+            // Keep the location if we aren't removing it
+            if !remove {
+                newArray.append(testLocation)
+            } else {
+                remove = false
+            }
+        }
+        
+        return newArray
+    }
     
 }

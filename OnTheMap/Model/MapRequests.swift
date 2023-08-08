@@ -4,6 +4,8 @@
 //
 //  Created by Monty Harper on 7/31/23.
 //
+//  Structs storing data structures for requests.
+//
 
 import Foundation
 

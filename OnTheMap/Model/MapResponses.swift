@@ -4,6 +4,8 @@
 //
 //  Created by Monty Harper on 7/31/23.
 //
+//  Structs storing data structures for responses.
+//
 
 import Foundation
 
@@ -24,7 +26,7 @@ struct Session: Codable {
     let expiration: String
 }
 
-// Why are we decoding this? I don't think we need it.
+// This one went unused, but here it is in case we need it in updates...
 struct PostStudentLocationResponse: Codable {
     let createdAt: Date
     let objectID: String
@@ -32,4 +34,4 @@ struct PostStudentLocationResponse: Codable {
 
 
 
-// Decode json response for nex thing...
+

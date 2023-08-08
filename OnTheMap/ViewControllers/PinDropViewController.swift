@@ -4,6 +4,8 @@
 //
 //  Created by Monty Harper on 7/30/23.
 //
+//  This VC allows users to enter a location and URL and drop a new pin on the map
+//
 
 import CoreLocation
 import Foundation
@@ -13,7 +15,7 @@ import UIKit
 class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
     
     
-    //MARK: Properties
+    //MARK: - Properties
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var locationField: UITextField!
@@ -25,7 +27,8 @@ class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
     var geoLocation = CLLocationCoordinate2D()
     
     
-    //MARK: Lifecycle functions
+    
+    //MARK: - Lifecycle functions
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,21 +42,24 @@ class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
     }
     
     
-    //MARK: IBActions
     
+    //MARK: - IBActions
+    
+    // Dismiss the VC when the user taps "Cancel."
     @IBAction func dismissPinDropViewController(_ sender: Any) {
         self.dismiss(animated: true)
     }
     
     
     
+    // Post a new pin when the user taps "Submit."
     @IBAction func postMyPin(_ sender: Any) {
         
         let myPin = StudentLocation(
             objectId: "abcd",
             uniqueKey: "1234",
-            firstName: "Yogi",
-            lastName: "Bear",
+            firstName: "Elvis",
+            lastName: "Presley",
             mapString: currentLocation,
             mediaURL: urlField.text ?? "",
             latitude: geoLocation.latitude,
@@ -61,35 +67,38 @@ class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
         )
         
         MapClient.postStudentLocation(pin:myPin, completion: handlePostPinResponse(success:error:))
-        
     }
+    
     
     func handlePostPinResponse(success:Bool, error:Error?) {
         
         if error != nil {
             showAlert(title: "Pin Failed", message: "Sorry, your pin failed to post. Please try again.", completion: {self.dismiss(animated:true)})
         } else {
-            showAlert(title: "Pin Posted! 😎", message: "Thank you for posting a pin!", completion: {self.dismiss(animated:true)})
+            showAlert(title: "Pin Posted! 😎", message: "Thank you for posting a pin!", completion: {
+                
+                // Shout it to the world - the user has posted a pin!
+                // This triggers the table VC to refresh the data from the server.
+                MapClient.nc.post(name: Notification.Name(MapClient.Notifications.pinAdded.rawValue), object: nil)
+                self.dismiss(animated:true)
+            })
         }
-        
     }
     
     
-    //MARK: Text field delegatem methods
+    
+    // MARK: - Text field delegate methods
 
     // When a location is submitted from the keyboard, attempt to geolocate and place a pin on the map.
     func textFieldDidEndEditing(_ textField: UITextField) {
-        
-        print("Text field did end editing has been called!!")
-        
+                
         /*
          Do nothing if:
-         - The text field we're looking at is not the locationField
+         - The text field that finished editing is not the locationField
          - The location entered is the same as the one we already have
          - The location entered is empty
          */
-        if textField != locationField || textField.text == currentLocation || textField.text == "" || textField.text == nil {
-            print("text does not meet requirements, returning with no action")
+        if textField != locationField || textField.text == currentLocation || !nonemptyString(textField.text) {
             return
             
         } else {
@@ -101,35 +110,38 @@ class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
             // Geocode the location string...
             let geocoder = CLGeocoder()
             geocoder.geocodeAddressString(currentLocation, completionHandler: GCHandler(placemarks:error:))
-            
         }
     }
     
     
+    // Dismisses the keyboard when the user hits return.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    
+    
+    // MARK: - Completion Handlers
     
         func GCHandler(placemarks: [CLPlacemark]?, error: Error?) {
                                 
-                print("geocoder has returned a result: \(placemarks)")
                 if error != nil {
                     
-                    print("there is an error in the result: \(error)")
                     self.showAlert(title: "Error Retrieving Location", message: "Your location could not be retrieved at this time. Please check your spelling and try again.")
                     
                 } else {
                     
-                    print("geocoder has not returned an error")
                     if let places = placemarks {
                         
-                        print("placemarks is not nil")
+                        // Geocoder may return multiple locations...
                         switch places.count {
                             
                         case 0:
-                            print("case 0")
                             // Not sure this will ever occurr - if placemarks isn't nil why would it be an empty array?
                             self.showAlert(title: "Location Not Found", message: "Please check your spelling and try again.")
                             
                         case 1:
-                            print("case 1: \(places[0])")
                             // We have success!
                             geoLocation = places[0].location!.coordinate
                             addToMap(places[0])
@@ -137,22 +149,23 @@ class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
                             
                             
                         default:
-                            print("case default")
+                            // Multiple locations in the result
                             self.showAlert(title: "Multiple Locations Found", message: "Please try again with a more specific description of your location.")
                         }
                         
                     } else {
-                        print("placemarks is nil")
+                        // Result is nil.
                         self.showAlert(title: "Location Does Not Seem to Exist", message: "Please try again with a different description.")
                     }
-                    
                 }
             activityIndicator.stopAnimating()
             }
     
     
     
+    // MARK: - Private Functions
     
+    // Adds the entered location to the map, if geolocate is successful.
     func addToMap(_ pin:CLPlacemark) {
         
         let annotation = MKPointAnnotation()
@@ -161,13 +174,7 @@ class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
         let region = MKCoordinateRegion(center: annotation.coordinate, span: (MKCoordinateSpan(latitudeDelta: 2.0, longitudeDelta: 2.0)))
         self.mapView.setRegion(region, animated: true)
         self.mapView.addAnnotations([annotation])
-        
     }
     
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
     
 }
