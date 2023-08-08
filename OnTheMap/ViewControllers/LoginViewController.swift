@@ -49,15 +49,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func loginCompletion(success: Bool, error: Error?) {
         
         if success {
+            MapClient.fetchUserName(completion: userNameCompletion(success:error:))
             self.performSegue(withIdentifier: "PresentTabBar", sender: nil)
             
         } else {
-            showAlert(title: "Login Error", message: "Please check your spelling and try again.")
             
-            if let error = error {
-                print("\(error)")
-                }
-            
+            if let error = error as? MapClient.loginMessage {
+                showAlert(title: error.title, message: error.description)
+            }
+
             // Reset login form.
             userName.text = ""
             password.text = ""
@@ -65,6 +65,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Handle fetch user name response
+    func userNameCompletion(success: Bool, error: Error?) {
+        if success {
+            // No action required
+        } else {
+            // Provide default name
+            MapClient.Auth.userLastName = "Dough"
+            MapClient.Auth.userFirstName = "Mon"
+        }
+        
+    }
     
     
     // MARK: - Private Methods

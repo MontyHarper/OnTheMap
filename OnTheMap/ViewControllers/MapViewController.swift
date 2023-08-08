@@ -51,7 +51,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         for student in Students.onTheMap {
             
-            var annotation = MKPointAnnotation()
+            let annotation = MKPointAnnotation()
             annotation.title = student.firstName + " " + student.lastName
             annotation.subtitle = student.validURL ? student.mediaURL : "No Link Available"
             annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(student.latitude), longitude: CLLocationDegrees(student.longitude))

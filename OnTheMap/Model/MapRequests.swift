@@ -16,5 +16,8 @@ struct SessionRequest: Codable {
     init(username: String, password: String) {
         self.udacity = ["username" : username, "password" : password]
     }
-    
 }
+
+
+
+

@@ -17,6 +17,8 @@ class MapClient {
     // Stores credentials
     struct Auth {
         static var sessionID = ""
+        static var userFirstName = ""
+        static var userLastName = ""
     }
     
     
@@ -30,6 +32,7 @@ class MapClient {
         
         // Types of requests
         case openSession
+        case fetchUserName
         case getStudentLocations
         case logout
         case dropPin
@@ -38,6 +41,7 @@ class MapClient {
         var URLString: String {
             switch self {
             case .openSession: return Endpoints.base + "v1/session"
+            case .fetchUserName: return Endpoints.base + "v1/users/\(Auth.sessionID)"
             case .getStudentLocations: return Endpoints.base + "v1/StudentLocation?limit=100&order=-updatedAt"
             case .logout: return Endpoints.base + "v1/session"
             case .dropPin: return Endpoints.base + "v1/StudentLocation"
@@ -62,8 +66,35 @@ class MapClient {
     }
     
     
+    // Set up error messages for login, to differentiate between possible errors.
+    enum loginMessage: Error {
+        case badCredentials
+        case networkError
+        
+        var title: String {
+            switch self {
+            case .badCredentials:
+                return "Incorrect Username or Password"
+            case .networkError:
+                return "Network Error"
+            }
+        }
+        
+        var description: String {
+            switch self {
+            case .badCredentials:
+                return "Please check your spelling and try again."
+            case .networkError:
+                return "Please check your connection and try again later."
+            }
+        }
+    }
+
+    
     
     // MARK: Network Request Functions
+    
+    
     
     // MARK: Login
     
@@ -81,10 +112,9 @@ class MapClient {
         do {
             request.httpBody = try JSONEncoder().encode(SessionRequest(username: username, password: password))
         } catch {
-            DispatchQueue.main.async {
-                completion(false, error)
-            }
-            return
+            // JSON Encoding failed; this is a coding error
+            fatalError("Login was unable to be attempted due to an error in the code.")
+            
         }
         
         // Set up a session and task
@@ -104,23 +134,65 @@ class MapClient {
                     }
                 } catch {
                     // The data doesn't fit our response pattern.
+                    // This probably means the credentials were wrong and the server is returning an error.
                     DispatchQueue.main.async {
-                        completion(false, error)
+                        completion(false, MapClient.loginMessage.badCredentials)
                     }
                 }
             } else {
                 // The response data was nil.
+                // This is probably a network connection error.
                 DispatchQueue.main.async {
-                    completion(false, error)
+                    completion(false, MapClient.loginMessage.networkError)
                 }
             }
         }
-        
         task.resume()
     }
     
     
-    // MARK: Retrieve Student Locations
+    // MARK: - Fetch User Name
+    
+    // Retrieves first and last name of user
+    class func fetchUserName(completion: @escaping (Bool,Error?) -> Void) {
+        
+        // Set up request, session, task
+        let request = URLRequest(url: MapClient.Endpoints.fetchUserName.url)
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, response, error in
+            
+            // If data is returned, trim off the nonsense at the beginning
+            if let data = data {
+                let range = 5..<data.count
+                let newData = data.subdata(in: range)
+                
+                // Decode JSON response
+                let decoder = JSONDecoder()
+                do {
+                    let results = try decoder.decode(UserData.self, from: newData)
+                    
+                    // Store user name
+                    Auth.userLastName = results.last_name
+                    Auth.userFirstName = results.first_name
+                    
+                    // Success!
+                    DispatchQueue.main.async {
+                        completion(true, nil)
+                    }
+                } catch {
+                    // The data doesn't fit our response pattern
+                    completion(false, error)
+                }
+            } else {
+                // request failed
+                completion(false,error)
+            }
+        }
+        task.resume()
+    }
+    
+    
+    // MARK: - Retrieve Student Locations
     
     // Retrieves an array of student locations.
     class func getStudentData(completion: @escaping (Bool,Error?) -> Void) {
@@ -163,7 +235,7 @@ class MapClient {
     
    
     
-    // MARK: Post a Pin
+    // MARK: - Post a Pin
     
     class func postStudentLocation(pin: StudentLocation, completion: @escaping (Bool,Error?) -> Void) {
         
@@ -194,7 +266,7 @@ class MapClient {
     
     
     
-    // MARK: Logout
+    // MARK: - Logout
     
     class func logout(completion: @escaping (Bool) -> Void) {
         

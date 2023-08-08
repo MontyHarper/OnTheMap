@@ -47,7 +47,7 @@ class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
     
     // Dismiss the VC when the user taps "Cancel."
     @IBAction func dismissPinDropViewController(_ sender: Any) {
-        self.dismiss(animated: true)
+        dismiss(animated: true)
     }
     
     
@@ -58,8 +58,8 @@ class PinDropViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
         let myPin = StudentLocation(
             objectId: "abcd",
             uniqueKey: "1234",
-            firstName: "Elvis",
-            lastName: "Presley",
+            firstName: MapClient.Auth.userFirstName,
+            lastName: MapClient.Auth.userLastName,
             mapString: currentLocation,
             mediaURL: urlField.text ?? "",
             latitude: geoLocation.latitude,

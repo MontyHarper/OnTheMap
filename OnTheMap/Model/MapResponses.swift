@@ -10,7 +10,7 @@
 import Foundation
 
 
-// Decode json response for opening a session...
+// Decode json response for opening a session
 struct SessionResponse: Codable {
     let account: Account
     let session: Session
@@ -26,11 +26,22 @@ struct Session: Codable {
     let expiration: String
 }
 
+// Decode json response from requesting user data
+struct UserDataResponse: Codable {
+    let user: UserData
+}
+
+struct UserData: Codable {
+    let first_name: String
+    let last_name: String
+}
+
 // This one went unused, but here it is in case we need it in updates...
 struct PostStudentLocationResponse: Codable {
     let createdAt: Date
     let objectID: String
 }
+
 
 
 
